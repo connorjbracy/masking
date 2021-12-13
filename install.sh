@@ -2,4 +2,4 @@
 
 set -e
 conda env create -n masking -f environment.yaml
-conda run -n masking python3 -m pip install .
+conda run -n masking python -m pip install .
