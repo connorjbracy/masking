@@ -4,7 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - numba
-  - skbeam
+  - scikit-beam
   - pyfai
   - fabio
   - numpy
