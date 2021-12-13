@@ -13,7 +13,7 @@ from fabio.fit2dmaskimage import Fit2dMaskImage
 from numpy import ndarray
 from pyFAI.azimuthalIntegrator import AzimuthalIntegrator
 
-from masking.masking import generate_binner, mask_img
+from masking.helpers import generate_binner, mask_img
 
 INTEG_SETTING = dict(
     npt=1480,
