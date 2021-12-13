@@ -1,0 +1,11 @@
+name: masking
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - numba
+  - skbeam
+  - pyfai
+  - fabio
+  - numpy
+  - matplotlib-base
