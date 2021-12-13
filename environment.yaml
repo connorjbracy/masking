@@ -9,3 +9,4 @@ dependencies:
   - fabio
   - numpy
   - matplotlib-base
+  - pip
