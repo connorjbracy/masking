@@ -32,6 +32,18 @@ _LABEL = {
 }
 
 
+def to_numpy(pixel_array):
+    if not isinstance(pixel_array, ndarray):
+        if not hasattr(pixel_array, 'to_numpy'):
+            raise TypeError("Attempting to use a pixel grid of type({}) as "
+                            "where a numpy.ndarray is expected without a "
+                            "known way of converting the given pixel array to "
+                            "a numpy.ndarray."
+                            .format(type(pixel_array)))
+        pixel_array = pixel_array.to_numpy()
+    return pixel_array
+
+
 def bg_sub(img: ndarray, bg_img: ndarray, bg_scale: float = None) -> ndarray:
     """Subtract the background image from the data image inplace.
 
@@ -80,6 +92,8 @@ def integrate(
     _integ_setting: dict
         The whole integration setting.
     """
+    img  = to_numpy(img)
+    mask = to_numpy(mask)
     # merge integrate setting
     _integ_setting = INTEG_SETTING.copy()
     if integ_setting is not None:
