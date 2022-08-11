@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pyFAI
 from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 import fabio
 from fabio.fit2dmaskimage import Fit2dMaskImage
 from numpy import ndarray
@@ -16,7 +17,7 @@ from pyFAI.azimuthalIntegrator import AzimuthalIntegrator
 from masking.helpers import generate_binner, mask_img
 
 INTEG_SETTING = dict(
-    npt=1480,
+    npt=3000,
     correctSolidAngle=False,
     method='splitpixel',
     unit='q_A^-1',
@@ -104,7 +105,12 @@ def integrate(
     return chi, _integ_setting
 
 
-def vis_img(img: ndarray, mask: ndarray = None, img_setting: dict = None, show: bool = True) -> Axes:
+def vis_img(img: ndarray,
+            mask: ndarray = None,
+            img_setting: dict = None,
+            show: bool = True,
+            fig: Figure = None
+) -> Axes:
     """Visualize the processed image. The color map will be determined by statistics of the pixel values. The color map
     is determined by mean +/- z_score * std.
 
@@ -129,7 +135,12 @@ def vis_img(img: ndarray, mask: ndarray = None, img_setting: dict = None, show: 
     """
     if img_setting is None:
         img_setting = dict()
-    fig = plt.figure()
+    if fig is None:
+        fig = plt.figure()
+    else:
+        for axis in fig.axes:
+            fig.delaxes(axis)
+        fig.clear()
     ax: Axes = fig.add_subplot(111)
     if mask is not None:
         img = np.ma.masked_array(img, mask)
@@ -152,7 +163,12 @@ def vis_img(img: ndarray, mask: ndarray = None, img_setting: dict = None, show: 
     return ax
 
 
-def vis_chi(chi: ndarray, plot_setting: dict = None, unit: str = None, show: bool = True) -> Axes:
+def vis_chi(chi: ndarray,
+            plot_setting: dict = None,
+            unit: str = None,
+            show: bool = True,
+            fig: Figure = None
+) -> Axes:
     """Visualize the chi curve.
 
     Parameters
@@ -176,7 +192,12 @@ def vis_chi(chi: ndarray, plot_setting: dict = None, unit: str = None, show: boo
     """
     if plot_setting is None:
         plot_setting = dict()
-    fig = plt.figure()
+    if fig is None:
+        fig = plt.figure()
+    else:
+        for axis in fig.axes:
+            fig.delaxes(axis)
+        fig.clear()
     ax = fig.add_subplot(111)
     ax.plot(chi[0], chi[1], **plot_setting)
     if unit:
