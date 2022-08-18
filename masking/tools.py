@@ -34,7 +34,7 @@ _LABEL = {
 
 
 def to_numpy(pixel_array):
-    if not isinstance(pixel_array, ndarray):
+    if ((pixel_array is not None) and (not isinstance(pixel_array, ndarray))):
         if not hasattr(pixel_array, 'to_numpy'):
             raise TypeError("Attempting to use a pixel grid of type({}) as "
                             "where a numpy.ndarray is expected without a "
