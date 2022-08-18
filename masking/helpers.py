@@ -9,6 +9,34 @@ from masking.jittools import mask_ring_mean, mask_ring_median
 mask_ring_dict = {"median": mask_ring_median, "mean": mask_ring_mean}
 
 
+def flatten(data_array):
+    """Perform the equivalent of numpy.ndarray.flatten, if the provided data
+    array has a known method to do so.
+
+    Parameters
+    ----------
+    data_array:
+        A data array of an unknown datatype, but one which has a known way of
+        obtaining the equivalent result of `data_array.flatten()`, had
+        `data_array` been of type numpy.ndarray (note; `data_array` can also
+        here just be a numpy.ndarray)
+
+    Returns
+    -------
+    numpy.ndarray:
+        The result of `data_array.flatten()` if `data_array` has been of type
+        numpy.ndarray.
+
+    """
+    if hasattr(data_array, 'flatten'):
+        return data_array.flatten()
+    elif hasattr(data_array, 'to_numpy'):
+        return data_array.to_numpy().flatten()
+    else:
+        raise TypeError("Attempting to flatten an array datatype that "
+                        "doesn't appear to have a known method to do so.")
+
+
 def map_to_binner(pixel_map, bins, mask=None):
     """Transforms pixel map and bins into a binner
 
@@ -28,8 +56,8 @@ def map_to_binner(pixel_map, bins, mask=None):
 
     """
     if mask is not None:
-        mask = mask.flatten()
-    return BinnedStatistic1D(pixel_map.flatten(), bins=bins, mask=mask)
+        mask = flatten(mask)
+    return BinnedStatistic1D(flatten(pixel_map), bins=bins, mask=mask)
 
 
 def generate_binner(geo, img_shape, mask=None):
@@ -156,9 +184,9 @@ def binned_outlier(
         pool = ThreadPoolExecutor(max_workers=20)
     # skbeam 0.0.12 doesn't have argsort_index cached
     idx = binner.argsort_index
-    tmsk = tmsk.flatten()
+    tmsk = flatten(tmsk)
     tmsk2 = tmsk[idx]
-    vfs = img.flatten()[idx]
+    vfs = flatten(img)[idx]
     pfs = np.arange(np.size(img))[idx]
     t = []
     i = 0
